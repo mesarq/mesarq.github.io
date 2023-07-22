@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cornucopias - Domes</title>
+    <link rel="stylesheet" href="tailwind.css">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+</head>
+
+<body class="bg-dark flex h-screen" x-data="alpineInstance()" x-init="fetchJpgStore()">
+    <div class="m-auto">
+        <div class="pb-4 text-gray-300 font-bold text-2xl text-center">CTV - Valuts</div>
+        <template x-if="isLoadingJpg">
+            <div class="text-sm font-bold text-green-500 text-center pb-2">Loading...</div>
+        </template>
+        <template x-if="isErrorJpg">
+            <div class="text-sm font-bold text-red-500 text-center pb-2" x-text="errorJpg"></div>
+        </template>
+        <div x-data="collection">
+            <table class="table-fixed text-gray-200 ml-2">
+                <thead class="border-b-8 border-dark">
+                    <tr class="text-left text-sm md:text-md">
+                        <th class="md:pr-14 pr-6">Rarity</th>
+                        <th class="md:pr-10 pr-4">Floor</th>
+                        <th class="has-tooltip">Staking Reward</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-for="(rarity, key) in rarities" :key="key">
+                        <tr :class="rarity.color">
+                            <td x-text="key"></td>
+                            <td x-text="rarity.floor"></td>
+                            <td x-text="rarity.staking_reward"></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        
+        
+
+
+        <div class="flex flex-col text-center text-xs text-gray-500 pt-2">
+            <div class="text-red-500">PLEASE DON'T LOAD THIS PAGE MORE THAN 2 TIMES PER MINUTE</div>
+            <div>JPG.STORE LIMITS THE NUMBER OF REQUESTS PER MINUTE</div>
+            <div class="text-red-500">IT MAY STOP WORKING FOR 1 HOUR</div>
+            <div>(JPG.STORE PAGE WILL STILL WORK FOR YOU)</div>
+        </div>
+    </div>
+    
+</body>
+
+</html>
+
+<script>
+    function alpineInstance() {
+        return {
+            isLoadingJpg: false,
+            isErrorJpg: false,
+            errorJpg: '',
+
+            walletSearch: localStorage.getItem("address") || '',
+            isLoading: false,
+            loaded: false,
+            isError: false,
+            error: '',
+
+            policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb',
+
+            wallet_total: 'Domes: 0',
+            // wallet_rewards: 0,
+
+            async fetchJpgStore(){
+                this.isLoadingJpg = true;
+                let jpgListings = [];
+                let processedListings = [];
+
+                let response = await fetch(`https://server.jpgstoreapis.com/policy/${this.policyId}/listings`);
+
+                if (!response.ok) {
+                    this.isLoadingJpg = false;
+                    this.isErrorJpg = true;
+                    this.errorJpg = `Error: ${response.status} - ${response.statusText}`
+                } else {
+
+                    let responseJson = await response.json();
+                    let nextPageCursor = responseJson['nextPageCursor'];
+                    let plots = responseJson['listings'];
+
+                    plots.forEach(plot => {
+                        if(plot['listing_type'] === 'SINGLE_ASSET'){
+                            let splittedName = plot['display_name'].split(" - ");
+                            let rarity = splittedName[2];
+                            let id = plot['asset_id'];
+                            let price = plot['price_lovelace']/1000000;
+
+                            if(price < this.collection['rarities'][rarity]['floor'] || this.collection['rarities'][rarity]['floor'] == 0){
+                                this.collection['rarities'][rarity]['floor'] = price;
+                                this.collection['rarities'][rarity]['asset_id'] = id;
+                                this.collection['rarities'][rarity]['url'] =  'https://www.jpg.store/asset/' + id; 
+                            }
+                        }
+                    });
+
+                    while (nextPageCursor !== null){
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        response = await fetch(`https://server.jpgstoreapis.com/policy/${this.policyId}/listings?cursor=${nextPageCursor}`);
+                        if (!response.ok) {
+                            this.isLoadingJpg = false;
+                            this.isErrorJpg = true;
+                            this.errorJpg = `Error: ${response.status} - ${response.statusText}`
+                            break;
+                        }
+
+                        responseJson = await response.json();
+                        nextPageCursor = responseJson['nextPageCursor'];
+                        plots = responseJson['listings'];
+
+                        plots.forEach(plot => {
+                        if(plot['listing_type'] === 'SINGLE_ASSET'){
+                            let splittedName = plot['display_name'].split(" - ");
+                            let rarity = splittedName[2];
+                            let id = plot['asset_id'];
+                            let price = plot['price_lovelace']/1000000;
+
+                            if(price < this.collection['rarities'][rarity]['floor'] || this.collection['rarities'][rarity]['floor'] == 0){
+                                this.collection['rarities'][rarity]['floor'] = price;
+                                this.collection['rarities'][rarity]['asset_id'] = id;
+                                this.collection['rarities'][rarity]['url'] =  'https://www.jpg.store/asset/' + id; 
+                            }
+                        }
+                    });
+
+                    }
+                    let test = this.collection['rarities'];
+                    console.log(test);
+                    this.isLoadingJpg = false;
+                    this.jpgLoaded = true;
+                }
+            },
+            collection: {
+                    'rarities': {
+                        'Common': {
+                            'color': 'text-gray-400',
+                            'in_wallet': 0,
+                            'staking_reward': 1,
+                            'floor': 0,
+                            'asset_id': 0,
+                            'url': '',
+                        },
+                        'Uncommon': {
+                            'color': 'text-green-500',
+                            'in_wallet': 0,
+                            'staking_reward': 5,
+                            'floor': 0,
+                            'asset_id': 0,
+                            'url': '',
+                        },
+                        'Gold': {
+                            'color': 'text-blue-500',
+                            'in_wallet': 0,
+                            'staking_reward': 10,
+                            'floor': 0,
+                            'asset_id': 0,
+                            'url': '',
+                        },
+                        'Jewels': {
+                            'color': 'text-pink-500',
+                            'in_wallet': 0,
+                            'staking_reward': 20,
+                            'floor': 0,
+                            'asset_id': 0,
+                            'url': '',
+                        },
+                        'Future': {
+                            'color': 'text-yellow-500',
+                            'in_wallet': 0,
+                            'staking_reward': 100,
+                            'floor': 0,
+                            'asset_id': 0,
+                            'url': '',
+                        }
+                    
+                }
+           }
+           
+        }
+    }
+</script>
