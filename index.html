@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cornucopias - Domes</title>
+    <title>CTV - Vaults</title>
     <link rel="stylesheet" href="tailwind.css">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -33,7 +33,7 @@
                     <template x-for="(rarity, key) in rarities" :key="key">
                         <tr :class="rarity.color">
                             <td x-text="key"></td>
-                            <td x-text="rarity.floor"></td>
+                            <td><a  x-bind:href="rarity.url" x-text="rarity.floor" target="_blank"></a></td>
                             <td x-text="rarity.staking_reward"></td>
                         </tr>
                     </template>
@@ -70,9 +70,6 @@
             error: '',
 
             policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb',
-
-            wallet_total: 'Domes: 0',
-            // wallet_rewards: 0,
 
             async fetchJpgStore(){
                 this.isLoadingJpg = true;
