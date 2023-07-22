@@ -1,259 +1,340 @@
 <!DOCTYPE html>
-<html lang="en" class="">
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTV - Vaults</title>
-    <link rel="stylesheet" href="tailwind.css">
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CTV NFT Tracker</title>
 
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+  
+  <!-- Theme style -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
+<body class="hold-transition  dark-mode" x-data="alpineInstance()" x-init="fetchJpgStore()">
+<div class="wrapper">
 
-<body class="bg-dark flex h-screen" x-data="alpineInstance()" x-init="fetchJpgStore()">
-    <div class="m-auto">
-        <div class="pb-4 text-gray-300 font-bold text-2xl text-center">CTV - Valuts</div>
-        <template x-if="isLoadingJpg">
-            <div class="text-sm font-bold text-green-500 text-center pb-2">Loading...</div>
-        </template>
-        <template x-if="isErrorJpg">
-            <div class="text-sm font-bold text-red-500 text-center pb-2" x-text="errorJpg"></div>
-        </template>
-        <div x-data="collection">
-            <table class="table-fixed text-gray-200 ml-2">
-                <thead class="border-b-8 border-dark">
-                    <tr class="text-left text-sm md:text-md">
-                        <th class="md:pr-14 pr-6">Rarity</th>
-                        <th class="md:pr-10 pr-4">Floor</th>
-                        <th class="has-tooltip">Staking Reward</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template x-for="(rarity, key) in VaultSeekers" :key="key">
-                        <tr :class="rarity.color">
-                            <td x-text="rarity.DisplayName" style="padding-right: 80px;"></td>
-                            <td><a  x-bind:href="rarity.url" x-text="rarity.floor" target="_blank"></a></td>
-                            <td x-text="rarity.staking_reward"></td>
-                        </tr>
-                    </template>
-                </tbody>
-            </table>
-      
-        <div class="text-gray-300 font-bold text-2xl text-center" style="padding: 15px;">CTV - Chamber Key</div>
-      
-            <table class="table-fixed text-gray-200 ml-2">
-                <thead class="border-b-8 border-dark">
-                    <tr class="text-left text-sm md:text-md">
-                        <th class="md:pr-14 pr-6">Rarity</th>
-                        <th class="md:pr-10 pr-4">Floor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template x-for="(rarity, key) in ChamberKey" :key="key">
-                        <tr :class="rarity.color">
-                            <td x-text="rarity.DisplayName" style="padding-right: 80px;"></td>
-                            <td><a  x-bind:href="rarity.url" x-text="rarity.floor" target="_blank"></a></td>
-                        </tr>
-                    </template>
-                </tbody>
-            </table>
-      
-        
-        <div class="text-gray-300 font-bold text-2xl text-center" style="padding: 15px;">CTV - Earth Vault</div>
-      
-            <table class="table-fixed text-gray-200 ml-2">
-                <thead class="border-b-8 border-dark">
-                    <tr class="text-left text-sm md:text-md">
-                        <th class="md:pr-14 pr-6">Rarity</th>
-                        <th class="md:pr-10 pr-4">Floor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template x-for="(rarity, key) in EarthVault" :key="key">
-                        <tr :class="rarity.color">
-                            <td x-text="rarity.DisplayName" style="padding-right: 80px;"></td>
-                            <td><a  x-bind:href="rarity.url" x-text="rarity.floor" target="_blank"></a></td>
-                        </tr>
-                    </template>
-                </tbody>
-            </table>
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>CTV NFT Tracker</h1>
+          </div>
         </div>
-        
-        
+      </div><!-- /.container-fluid -->
+    </section>
 
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid" x-data="collection">
 
-        <div class="flex flex-col text-center text-xs text-gray-500 pt-2">
-            <div class="text-red-500">PLEASE DON'T LOAD THIS PAGE MORE THAN 2 TIMES PER MINUTE</div>
-            <div>JPG.STORE LIMITS THE NUMBER OF REQUESTS PER MINUTE</div>
-            <div class="text-red-500">IT MAY STOP WORKING FOR 1 HOUR</div>
-            <div>(JPG.STORE PAGE WILL STILL WORK FOR YOU)</div>
+        <h3 class="mt-4 mb-4">Vault Seekers</h3>
+
+        <div class="row" >
+           <!-- /.col -->
+           <template x-for="(rarity, key) in VaultSeekers" :key="key">
+          <div class="col">
+            <!-- Widget: user widget style 1 -->
+            <div class="card card-widget widget-user">
+              <!-- Add the bg color to the header using any of the bg-* classes -->
+              <div class="widget-user-header" :class="rarity.color">
+                <h3 class="widget-user-username" x-text="rarity.DisplayName"></h3>
+                <h5 class="widget-user-desc" x-text="key"></h5>
+              </div>
+
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col-sm-4 border-right">
+                    <div class="description-block">
+                      <h5 class="description-header"><a  x-bind:href="rarity.url" x-text="rarity.floor" target="_blank"></a></h5>
+                      <span class="description-text">Floor Price</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-sm-4 border-right">
+                    <div class="description-block">
+                      <h5 class="description-header" x-text="rarity.staking_reward"></h5>
+                      <span class="description-text" >Staking Reward</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-sm-4">
+                    <div class="description-block">
+                      <h5 class="description-header" x-text="rarity.daysLeft"></h5>
+                      <span class="description-text">Staking Days Left</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                </div>
+                <!-- /.row -->
+                <ul class="nav flex-column">
+                  <li class="nav-item">
+                    <a  class="nav-link">
+                      CTV Left to be staked <span class="float-right badge bg-primary" x-text="rarity.FutureCTV"></span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      Days to ROI <span class="float-right badge bg-info">TBA</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      Cost per CTV at current cost <span class="float-right badge bg-success">TBA</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- /.widget-user -->
+          </div>
+        </template>
+
+          <!-- /.col -->
         </div>
-    </div>
-    
+        <!-- /.row -->
+
+        <h3 class="mt-4 mb-4">Earth Node + Chamber Key</h3>
+
+        <div class="row" >
+           <!-- /.col -->
+           <template x-for="(rarity, key) in EarthVault" :key="key">
+          <div class="col">
+            <!-- Widget: user widget style 1 -->
+            <div class="card card-widget widget-user">
+              <!-- Add the bg color to the header using any of the bg-* classes -->
+              <div class="widget-user-header" :class="rarity.color">
+                <h3 class="widget-user-username" x-text="rarity.DisplayName"></h3>
+                <h5 class="widget-user-desc" x-text="key"></h5>
+              </div>
+
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col border-right">
+                    <div class="description-block">
+                      <h5 class="description-header"><a  x-bind:href="rarity.url" x-text="rarity.floor" target="_blank"></a></h5>
+                      <span class="description-text">Floor Price</span>
+                    </div>
+                    <!-- /.description-block -->
+       
+                </div>
+
+              </div>
+            </div>
+            <!-- /.widget-user -->
+          </div>
+        </template>
+        <template x-for="(rarity, key) in ChamberKey" :key="key">
+          <div class="col">
+            <!-- Widget: user widget style 1 -->
+            <div class="card card-widget widget-user">
+              <!-- Add the bg color to the header using any of the bg-* classes -->
+              <div class="widget-user-header" :class="rarity.color">
+                <h3 class="widget-user-username" x-text="rarity.DisplayName"></h3>
+                <h5 class="widget-user-desc" x-text="key"></h5>
+              </div>
+
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col border-right">
+                    <div class="description-block">
+                      <h5 class="description-header"><a  x-bind:href="rarity.url" x-text="rarity.floor" target="_blank"></a></h5>
+                      <span class="description-text">Floor Price</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+          
+                </div>
+                <!-- /.row -->
+              </div>
+            </div>
+            <!-- /.widget-user -->
+          </div>
+        </template>
+
+          <!-- /.col -->
+        </div>
+        </div>
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+</div>
+
 </body>
-
 </html>
 
 <script>
 
 
 
-    function alpineInstance() {
-        return {
-            isLoadingJpg: false,
-            isErrorJpg: false,
-            errorJpg: '',
+  function alpineInstance() {
+      return {
+          isLoadingJpg: false,
+          isErrorJpg: false,
+          errorJpg: '',
 
-            walletSearch: localStorage.getItem("address") || '',
-            isLoading: false,
-            loaded: false,
-            isError: false,
-            error: '',
+          walletSearch: localStorage.getItem("address") || '',
+          isLoading: false,
+          loaded: false,
+          isError: false,
+          error: '',
 
-            async fetchJpgStore(){
-                this.isLoadingJpg = true;
-                let jpgListings = [];
-                let processedListings = [];
-                
-                let nftType = Object.keys(this.collection);
-                for (let x = 0; x < nftType.length; x++) {
+          async fetchJpgStore(){
+              this.isLoadingJpg = true;
+              let jpgListings = [];
+              let processedListings = [];
+              // Get today's date
+              const today = new Date();
+              // Get the future date
+              const futureDate = new Date("2024-07-02");
+              // Calculate the difference in milliseconds
+              const difference = futureDate.getTime() - today.getTime();
+              // Convert the difference to days
+              const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
 
-                let keys = Object.keys(this.collection[nftType[x]]);
+              let nftType = Object.keys(this.collection);
+              for (let x = 0; x < nftType.length; x++) {
 
-                for (let i = 0; i < keys.length; i++) {
-                    let item = this.collection[nftType[x]][keys[i]];
-                    let url = `https://server.jpgstoreapis.com/search/tokens?policyIds=${item.policyId}&saleType=default&sortBy=price-low-to-high&traits=${item.traits}}&listingTypes=ALL_LISTINGS&verified=default&size=1`;
-                    let response = await fetch(url);
-                    if (!response.ok) {
-                    this.isLoadingJpg = false;
-                    this.isErrorJpg = true;
-                    this.errorJpg = `Error: ${response.status} - ${response.statusText}`
-                } else {
-                    let responseJson =  await response.json();
-                    let cheapestItem = responseJson['tokens'][0]["listing_lovelace"];
-                    let price = cheapestItem/1000000;
-                    if (cheapestItem == undefined) 
-                    {
-                        price="None Listed";
-                    }
-                    item['floor'] = price;
-                    item['asset_id'] = responseJson['tokens'][0]["asset_id"];;
-                    item['url'] =  'https://www.jpg.store/asset/' + item['asset_id']; 
+              let keys = Object.keys(this.collection[nftType[x]]);
+  
+              for (let i = 0; i < keys.length; i++) {
+                  let item = this.collection[nftType[x]][keys[i]];
+                  let url = `https://server.jpgstoreapis.com/search/tokens?policyIds=${item.policyId}&saleType=default&sortBy=price-low-to-high&traits=${item.traits}}&listingTypes=ALL_LISTINGS&verified=default&size=1`;
+                  let response = await fetch(url);
+                  if (!response.ok) {
+                  this.isLoadingJpg = false;
+                  this.isErrorJpg = true;
+                  this.errorJpg = `Error: ${response.status} - ${response.statusText}`
+              } else {
+                  let responseJson =  await response.json();
+                  let cheapestItem = responseJson['tokens'][0]["listing_lovelace"];
+                  let price = cheapestItem/1000000;
+                  if (cheapestItem == undefined) 
+                  {
+                      price="None Listed";
+                  }
+                  item['floor'] = price;
+                  item['asset_id'] = responseJson['tokens'][0]["asset_id"];;
+                  item['url'] =  'https://www.jpg.store/asset/' + item['asset_id']; 
+                  if (nftType[x] == "VaultSeekers")
+                      {
+                          item['daysLeft'] = daysLeft;
+                          item['FutureCTV'] = daysLeft * item['staking_reward'];
+                      }
+                  this.isLoadingJpg = false;
+                  this.jpgLoaded = true;
+              }
+              }}
+          },
+          collection: {
+                  'VaultSeekers': {
+                      'Common': {
+                          'DisplayName' : 'Vault Seeker',
+                          'color': 'bg-info',
+                          'staking_reward': 1,
+                          'floor': 0,
+                          'asset_id': 0,
+                          'url': '',
+                          'traits' : 'eyJ2YXVsdCB0eXBlIjpbImNvbW1vbiJdfQ%3D%3D',
+                          policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb'
+                      },
+                      'Uncommon': {
+                          'DisplayName' : 'Vault Seeker',
+                          'color': 'bg-secondary',
+                          'staking_reward': 5,
+                          'floor': 0,
+                          'asset_id': 0,
+                          'url': '',
+                          'traits' : 'eyJ2YXVsdCB0eXBlIjpbInVuY29tbW9uIl19',
+                          policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb'
+                      },
+                      'Gold': {
+                          'DisplayName' : 'Vault Seeker',
+                          'color': 'bg-primary',
+                          'staking_reward': 10,
+                          'floor': 0,
+                          'asset_id': 0,
+                          'url': '',
+                          'traits' : 'eyJ2YXVsdCB0eXBlIjpbImdvbGQiXX0%3D',
+                          policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb'
+                      },
+                      'Jewels': {
+                          'DisplayName' : 'Vault Seeker',
+                          'color': 'bg-success',
+                          'staking_reward': 20,
+                          'floor': 0,
+                          'asset_id': 0,
+                          'url': '',
+                          'traits' : 'eyJ2YXVsdCB0eXBlIjpbImpld2VscyJdfQ%3D%3D',
+                          policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb'
+                      },
+                      'Future': {
+                          'DisplayName' : 'Vault Seeker',
+                          'color': 'bg-warning',
+                          'staking_reward': 100,
+                          'floor': 0,
+                          'asset_id': 0,
+                          'url': '',
+                          'traits' : 'eyJ2YXVsdCB0eXBlIjpbImZ1dHVyZSJdfQ%3D%3D',
+                          policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb'
+                      }},
+                      "EarthVault":{
+                      'EV': {
+                          'DisplayName' : 'Earth Vault',
+                          'color': 'bg-primary',
+                          'floor': 0,
+                          'asset_id': 0,
+                          'url': '',
+                          'traits' : '',
+                          policyId: '2af4e8789778b79ddf25f2062377709e49181265d87beb2f99c902a4'
+                      }},
+                      "ChamberKey":{
+                      'Member': {
+                          'DisplayName' : 'Chamber Key - Member',
+                          'color': 'bg-success',
+                          'floor': 0,
+                          'asset_id': 0,
+                          'url': '',
+                          'traits' : 'eyJjaGFtYmVyIGFjY2VzcyI6WyJtZW1iZXIiXX0%3D',
+                          policyId: 'fb57afa1f178d13fdc7bb5609e8fae5859bae9e6d670278f9acbef90'
+                      },
+                      'Director': {
+                          'DisplayName' : 'Chamber Key - Director',
+                          'color': 'bg-warning',
+                          'floor': 0,
+                          'asset_id': 0,
+                          'url': '',
+                          'traits' : 'eyJjaGFtYmVyIGFjY2VzcyI6WyJkaXJlY3RvciJdfQ%3D%3D',
+                          policyId: 'fb57afa1f178d13fdc7bb5609e8fae5859bae9e6d670278f9acbef90'
+                      },
+                      'Chair': {
+                          'DisplayName' : 'Chamber Key - Chair',
+                          'color': 'bg-danger',
+                          'floor': 0,
+                          'asset_id': 0,
+                          'url': '',
+                          'traits' : 'eyJjaGFtYmVyIGFjY2VzcyI6WyJjaGFpciJdfQ%3D%3D',
+                          policyId: 'fb57afa1f178d13fdc7bb5609e8fae5859bae9e6d670278f9acbef90'
+                      }
 
-                    this.isLoadingJpg = false;
-                    this.jpgLoaded = true;
-                }
-                }}
-            },
-            collection: {
-                    'VaultSeekers': {
-                        'Common': {
-                            'DisplayName' : 'Vault Seeker - Common',
-                            'color': 'text-white-400',
-                            'in_wallet': 0,
-                            'staking_reward': 1,
-                            'floor': 0,
-                            'asset_id': 0,
-                            'url': '',
-                            'traits' : 'eyJ2YXVsdCB0eXBlIjpbImNvbW1vbiJdfQ%3D%3D',
-                            policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb'
-                        },
-                        'Uncommon': {
-                            'DisplayName' : 'Vault Seeker - Uncommon',
-                            'color': 'text-green-500',
-                            'in_wallet': 0,
-                            'staking_reward': 5,
-                            'floor': 0,
-                            'asset_id': 0,
-                            'url': '',
-                            'traits' : 'eyJ2YXVsdCB0eXBlIjpbInVuY29tbW9uIl19',
-                            policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb'
-                        },
-                        'Gold': {
-                            'DisplayName' : 'Vault Seeker - Gold',
-                            'color': 'text-blue-500',
-                            'in_wallet': 0,
-                            'staking_reward': 10,
-                            'floor': 0,
-                            'asset_id': 0,
-                            'url': '',
-                            'traits' : 'eyJ2YXVsdCB0eXBlIjpbImdvbGQiXX0%3D',
-                            policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb'
-                        },
-                        'Jewels': {
-                            'DisplayName' : 'Vault Seeker - Jewels',
-                            'color': 'text-pink-500',
-                            'in_wallet': 0,
-                            'staking_reward': 20,
-                            'floor': 0,
-                            'asset_id': 0,
-                            'url': '',
-                            'traits' : 'eyJ2YXVsdCB0eXBlIjpbImpld2VscyJdfQ%3D%3D',
-                            policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb'
-                        },
-                        'Future': {
-                            'DisplayName' : 'Vault Seeker - Future',
-                            'color': 'text-yellow-500',
-                            'in_wallet': 0,
-                            'staking_reward': 100,
-                            'floor': 0,
-                            'asset_id': 0,
-                            'url': '',
-                            'traits' : 'eyJ2YXVsdCB0eXBlIjpbImZ1dHVyZSJdfQ%3D%3D',
-                            policyId: '1c9cc348fcb844ba233b1d9582d177a99c25b0117cbb4ca14b9bcebb'
-                        }},
-                        "EarthVault":{
-                        'EV': {
-                            'DisplayName' : 'Earth Vault',
-                            'color': 'text-white-500',
-                            'in_wallet': 0,
-                            'staking_reward': 100,
-                            'floor': 0,
-                            'asset_id': 0,
-                            'url': '',
-                            'traits' : '',
-                            policyId: '2af4e8789778b79ddf25f2062377709e49181265d87beb2f99c902a4'
-                        }},
-                        "ChamberKey":{
-                        'Member': {
-                            'DisplayName' : 'Chamber Key - Member',
-                            'color': 'text-green-500',
-                            'in_wallet': 0,
-                            'staking_reward': 100,
-                            'floor': 0,
-                            'asset_id': 0,
-                            'url': '',
-                            'traits' : 'eyJjaGFtYmVyIGFjY2VzcyI6WyJtZW1iZXIiXX0%3D',
-                            policyId: 'fb57afa1f178d13fdc7bb5609e8fae5859bae9e6d670278f9acbef90'
-                        },
-                        'Director': {
-                            'DisplayName' : 'Chamber Key - Director',
-                            'color': 'text-pink-500',
-                            'in_wallet': 0,
-                            'staking_reward': 100,
-                            'floor': 0,
-                            'asset_id': 0,
-                            'url': '',
-                            'traits' : 'eyJjaGFtYmVyIGFjY2VzcyI6WyJkaXJlY3RvciJdfQ%3D%3D',
-                            policyId: 'fb57afa1f178d13fdc7bb5609e8fae5859bae9e6d670278f9acbef90'
-                        },
-                        'Chair': {
-                            'DisplayName' : 'Chamber Key - Chair',
-                            'color': 'text-yellow-500',
-                            'in_wallet': 0,
-                            'staking_reward': 100,
-                            'floor': 0,
-                            'asset_id': 0,
-                            'url': '',
-                            'traits' : 'eyJjaGFtYmVyIGFjY2VzcyI6WyJjaGFpciJdfQ%3D%3D',
-                            policyId: 'fb57afa1f178d13fdc7bb5609e8fae5859bae9e6d670278f9acbef90'
-                        }
-
-                    
-                }
-           }
-           
-        }
-    }
+                  
+              }
+         }
+         
+      }
+  }
 </script>
