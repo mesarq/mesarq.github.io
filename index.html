@@ -234,7 +234,7 @@
                       {
                           item['daysLeft'] = daysLeft;
                           item['FutureCTV'] = daysLeft * item['staking_reward'];
-                          item['costAtCurrentPrice']= Math.ceil(item['FutureCTV'] / item['floor']);
+                          item['costAtCurrentPrice']=(item['floor']/item['FutureCTV']).toPrecision(4);
                       }
                   this.isLoadingJpg = false;
                   this.jpgLoaded = true;
