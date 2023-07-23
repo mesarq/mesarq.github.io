@@ -81,7 +81,7 @@
                 <ul class="nav flex-column">
                   <li class="nav-item">
                     <a  class="nav-link">
-                      CTV Left to be staked <span class="float-right badge bg-primary" x-text="rarity.FutureCTV"></span>
+                        Staking left at current level <span class="float-right badge bg-primary" x-text="rarity.FutureCTV"></span>
                     </a>
                   </li>
                   <li class="nav-item">
@@ -90,8 +90,8 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      Cost per CTV at current cost <span class="float-right badge bg-success">TBA</span>
+                    <a class="nav-link">
+                      Cost per CTV at current cost <span class="float-right badge bg-success" x-text="rarity.costAtCurrentPrice"></span>
                     </a>
                   </li>
                 </ul>
@@ -234,6 +234,7 @@
                       {
                           item['daysLeft'] = daysLeft;
                           item['FutureCTV'] = daysLeft * item['staking_reward'];
+                          item['costAtCurrentPrice']= Math.ceil(item['FutureCTV'] / item['floor']);
                       }
                   this.isLoadingJpg = false;
                   this.jpgLoaded = true;
