@@ -94,12 +94,17 @@
                   </li>
                   <li class="nav-item">
                     <a class="nav-link">
+                      Cost per CTV at current cost <span class="float-right badge bg-success" x-text="rarity.costAtCurrentPrice"></span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link">
                       Days to ROI <span class="float-right badge bg-info" x-text="rarity.daysROI"></span>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link">
-                      Cost per CTV at current cost <span class="float-right badge bg-success" x-text="rarity.costAtCurrentPrice"></span>
+                      Days to ROI at ATH (0.083)<span class="float-right badge bg-danger" x-text="rarity.daysRoiATH"></span>
                     </a>
                   </li>
                 </ul>
@@ -220,6 +225,8 @@ async function loader(item, nftType, loader) {
                           item['costAtCurrentPrice']=(item['floor']/item['FutureCTV']).toPrecision(4);
                           var dailyprofit = loader.collection['ctvPrice']*item['staking_reward'];
                           item['daysROI']= Math.ceil(item['floor']/dailyprofit);
+                          var athProfit = 0.08316*item['staking_reward'];
+                          item['daysRoiATH']= Math.ceil(item['floor']/athProfit);
                       }
 
               }
