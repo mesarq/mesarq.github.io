@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRASH Rewards Calculator</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #343a40;
+            color: #fff;
+        }
+        .form-control {
+            background-color: #495057;
+            color: #fff;
+            border: 1px solid #ced4da;
+        }
+        .form-label {
+            color: #fff;
+        }
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: #fff;
+            opacity: 1; /* Firefox */
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function calculateRewards() {
+            var ada = parseFloat(document.getElementById('ada').value);
+            var epochs = parseFloat(document.getElementById('epochs').value);
+            var bonusPercentage = parseFloat(document.getElementById('bonusPercentage').value) / 100;
+
+            var totalRewards = (ada * 0.010 * epochs) + (ada * 0.010 * epochs * bonusPercentage);
+            document.getElementById('result').innerHTML = 'Total CRASH Rewards: ' + totalRewards.toFixed(2);
+        }
+    </script>
+</head>
+<body>
+    <div class="container text-center">
+        <h2>CRASH Rewards Calculator</h2>
+        <div class="form-group">
+            <label for="ada" class="form-label">ADA:</label>
+            <input type="number" class="form-control" id="ada" placeholder="Enter ADA amount">
+        </div>
+        <div class="form-group">
+            <label for="epochs" class="form-label">Total Epochs:</label>
+            <input type="number" class="form-control" id="epochs" placeholder="Enter Total Epochs">
+        </div>
+        <div class="form-group">
+            <label for="bonusPercentage" class="form-label">Bonus Percentage:</label>
+            <input type="number" class="form-control" id="bonusPercentage" placeholder="Enter Bonus Percentage">
+        </div>
+        <button type="button" class="btn btn-primary" onclick="calculateRewards()">Calculate</button>
+        <p id="result"></p>
+        
+        <!-- Image Placeholder -->
+        <div class="mt-4">
+            <img src="bonus.png" class="img-fluid mx-auto d-block" alt="Bonus Image">
+        </div>
+    </div>
+</body>
+</html>
