@@ -33,7 +33,7 @@
             var bonusPercentage = parseFloat(document.getElementById('bonusPercentage').value) / 100;
 
             var totalRewards = (ada * 0.010 * epochs) + (ada * 0.010 * epochs * bonusPercentage);
-            document.getElementById('result').innerHTML = 'Total CRASH Rewards: ' + totalRewards.toFixed(2);
+            document.getElementById('result').innerHTML = 'Total CRASH Rewards: ' + totalRewards.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
     </script>
 </head>
