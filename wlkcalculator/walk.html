@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Token Allocation Calculator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #343a40;
+            color: white;
+        }
+        .container {
+            padding-top: 20px;
+        }
+		.card-body {
+		            background-color: gray;
+
+		}
+        input {
+            color: black;
+        }
+        .card, .subcard {
+            margin-bottom: 20px;
+        }
+        .subcard {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Token Allocation Calculator</h2>
+
+        <!-- Allocation Form Card -->
+        <div class="card">
+            <div class="card-body">
+                <form id="allocationForm">
+                    <div class="form-group">
+                        <label for="privateSale">PRIVATE SALE (6 months) - Price ADA 0.000035000</label>
+                        <input type="number" class="form-control" id="privateSale" placeholder="Enter amount in ADA">
+                    </div>
+                    <div class="form-group">
+                        <label for="walkpassVested">WALKPASS VESTED (3 months) - Price ADA 0.000052500</label>
+                        <input type="number" class="form-control" id="walkpassVested" placeholder="Enter amount in ADA">
+                    </div>
+                    <div class="form-group">
+                        <label for="walkpassNotVested">WALKPASS NOT VESTED - Price ADA 0.000068250</label>
+                        <input type="number" class="form-control" id="walkpassNotVested" placeholder="Enter amount in ADA">
+                    </div>
+                    <div class="form-group">
+                        <label for="walklistSale">WALKLIST SALE - Price ADA 0.000075075</label>
+                        <input type="number" class="form-control" id="walklistSale" placeholder="Enter amount in ADA">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Circulating Supply and Market Cap Subcard -->
+        <div class="subcard card">
+            <div class="card-body">
+			<h3>Future Parameters</h2>
+                <div class="form-group">
+                    <label for="circulatingSupply">Future Circulating Supply</label>
+                    <input type="number" class="form-control" id="circulatingSupply" value="6888750000">
+                </div>
+                <div class="form-group">
+                    <label for="marketCap">Future Market Cap</label>
+                    <input type="number" class="form-control" id="marketCap" value="517173">
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results">
+            <h3>Total Tokens: <span id="totalTokens">0</span></h3>
+            <h3>Average Buy Price: <span id="averagePrice">0</span> ADA</h3>
+            <h3>Future Price: <span id="priceFuture">0</span> ADA</h3>
+            <h3>ADA Holding at Future Price: <span id="adaHolding">0</span></h3>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        document.getElementById('allocationForm').addEventListener('input', function() {
+            let totalTokens = 0;
+            let totalInvestment = 0;
+
+            const privateSale = parseFloat(document.getElementById('privateSale').value) || 0;
+            totalTokens += privateSale / 0.000035000;
+            totalInvestment += privateSale;
+
+            const walkpassVested = parseFloat(document.getElementById('walkpassVested').value) || 0;
+            totalTokens += walkpassVested / 0.000052500;
+            totalInvestment += walkpassVested;
+
+            const walkpassNotVested = parseFloat(document.getElementById('walkpassNotVested').value) || 0;
+            totalTokens += walkpassNotVested / 0.000068250;
+            totalInvestment += walkpassNotVested;
+
+            const walklistSale = parseFloat(document.getElementById('walklistSale').value) || 0;
+            totalTokens += walklistSale / 0.000075075;
+            totalInvestment += walklistSale;
+
+            document.getElementById('totalTokens').textContent = totalTokens.toFixed(2);
+            document.getElementById('averagePrice').textContent = (totalInvestment / totalTokens).toFixed(8);
+			  // Circulating Supply and Market Cap Calculations
+            const circulatingSupply = parseFloat(document.getElementById('circulatingSupply').value) || 0;
+            const marketCap = parseFloat(document.getElementById('marketCap').value) || 0;
+            const priceFuture = marketCap / circulatingSupply;
+            const adaHolding = totalTokens * priceFuture;
+
+            // Update Results
+            document.getElementById('totalTokens').textContent = totalTokens.toFixed(2);
+            document.getElementById('averagePrice').textContent = (totalInvestment / totalTokens).toFixed(8);
+            document.getElementById('priceFuture').textContent = priceFuture.toFixed(8);
+            document.getElementById('adaHolding').textContent = adaHolding.toFixed(2);
+        });
+    </script>
+</body>
+</html>
