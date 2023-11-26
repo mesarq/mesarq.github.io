@@ -11,48 +11,62 @@
         .container {
             padding-top: 20px;
         }
-		.card-body {
-		            background-color: gray;
-
-		}
+        .card-body {
+            background-color: gray;
+        }
         input {
             color: black;
         }
         .card, .subcard {
             margin-bottom: 20px;
         }
-        .subcard {
-            background-color: #f8f9fa;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="mainContainer">
         <h2>Token Allocation Calculator</h2>
-
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
         <!-- Allocation Form Card -->
         <div class="card">
             <div class="card-body">
                 <form id="allocationForm">
                     <div class="form-group">
-                        <label for="privateSale">PRIVATE SALE (6 months) - Price ADA 0.000035000</label>
+                        <label for="privateSale">PRIVATE SALE (6 months) <br> <b>Price ADA 0.000035000</b></label>
                         <input type="number" class="form-control" id="privateSale" placeholder="Enter amount in ADA">
                     </div>
                     <div class="form-group">
-                        <label for="walkpassVested">WALKPASS VESTED (3 months) - Price ADA 0.000052500</label>
+                        <label for="walkpassVested">WALKPASS VESTED (3 months) <br><b>Price ADA 0.000052500</b></label>
                         <input type="number" class="form-control" id="walkpassVested" placeholder="Enter amount in ADA">
                     </div>
                     <div class="form-group">
-                        <label for="walkpassNotVested">WALKPASS NOT VESTED - Price ADA 0.000068250</label>
+                        <label for="walkpassNotVested">WALKPASS NOT VESTED <br><b>Price ADA 0.000068250</b></label>
                         <input type="number" class="form-control" id="walkpassNotVested" placeholder="Enter amount in ADA">
                     </div>
                     <div class="form-group">
-                        <label for="walklistSale">WALKLIST SALE - Price ADA 0.000075075</label>
+                        <label for="walklistSale">WALKLIST SALE <br><b>Price ADA 0.000075075</b></label>
                         <input type="number" class="form-control" id="walklistSale" placeholder="Enter amount in ADA">
                     </div>
                 
+</form>
+            </div>
+        </div>    </div>
+    <div class="col-sm">
+			        <!-- Walkpass Airdrop Calculation Subcard -->
+        <div class="subcard card">
+            <div class="card-body">
+                <h3>Walkpass Airdrop Calculation</h3>
+                <div class="form-group">
+                    <label for="numberOfWalkpass">Number of Walkpass</label>
+                    <input type="number" class="form-control" id="numberOfWalkpass" placeholder="Enter number of Walkpass">
+                </div>
 
-        <!-- Circulating Supply and Market Cap Subcard -->
+            </div>
+        </div>
+ </div>
+    <div class="col-sm">
+	        <!-- Circulating Supply and Market Cap Subcard -->
         <div class="subcard card">
             <div class="card-body">
 			<h3>Future Parameters</h2>
@@ -64,57 +78,125 @@
                     <label for="marketCap">Future Market Cap</label>
                     <input type="number" class="form-control" id="marketCap" value="517173">
                 </div>
-            </div>
-        </div>
-</form>
-            </div>
-        </div>
+				        <!-- Results Section -->
 
-        <!-- Results Section -->
-        <div id="results">
-            <h3>Total Tokens: <span id="totalTokens">0</span></h3>
-            <h3>Average Buy Price: <span id="averagePrice">0</span> ADA</h3>
-            <h3>Future Price: <span id="priceFuture">0</span> ADA</h3>
-            <h3>ADA Holding at Future Price: <span id="adaHolding">0</span></h3>
-        </div>
+            </div>
+        </div>   
+    </div>
+  </div>
+</div>
+
+		<div class="container">
+  <div class="row">
+    <div class="col-sm">
+                   <h1>Presale stats</h1>
+                    <div class="form-group">
+                        <label>Total Presale Tokens:</label>
+                        <input type="text" id="totalTokens" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Average Buy Price (ADA):</label>
+                        <input type="text" id="averagePrice" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Future Price (ADA):</label>
+                        <input type="text" id="priceFuture" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>ADA Holding at Future Price:</label>
+                        <input type="text" id="adaHolding" class="form-control" disabled>
+                    </div>
+    </div>
+    <div class="col-sm">
+  <div class="col-sm">
+                <div id="results2">
+                    <h1>Airdrop Stats</h1>
+                    <div class="form-group">
+                        <label>Number of Tokens from Airdrop:</label>
+                        <input type="text" id="airdropTokens" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>ADA Holding from Airdrop at Future Price:</label>
+                        <input type="text" id="adaHoldingFromAirdrop" class="form-control" disabled>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="col-sm">
+ 
+            <div class="col-sm">
+                <div id="results3">
+                    <h1>Combined Stats</h1>
+                    <div class="form-group">
+                        <label>Total Tokens (Presale + Airdrop):</label>
+                        <input type="text" id="totalCombinedTokens" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Total ADA Holding (Presale + Airdrop) at Future Price:</label>
+                        <input type="text" id="totalCombinedAdaHolding" class="form-control" disabled>
+                    </div>
+                </div>
+            </div>  </div>
+  </div>
+</div>
+
+
+
     </div>
     </div>
 
-    <script>
-        document.getElementById('allocationForm').addEventListener('input', function() {
-            let totalTokens = 0;
-            let totalInvestment = 0;
+<script>
+    document.getElementById('mainContainer').addEventListener('input', function() {
+        let totalTokens = 0;
+        let totalInvestment = 0;
 
-            const privateSale = parseFloat(document.getElementById('privateSale').value) || 0;
-            totalTokens += privateSale / 0.000035000;
-            totalInvestment += privateSale;
+        // Allocation Calculations
+        const privateSale = parseFloat(document.getElementById('privateSale').value) || 0;
+        totalTokens += privateSale / 0.000035000;
+        totalInvestment += privateSale;
 
-            const walkpassVested = parseFloat(document.getElementById('walkpassVested').value) || 0;
-            totalTokens += walkpassVested / 0.000052500;
-            totalInvestment += walkpassVested;
+        const walkpassVested = parseFloat(document.getElementById('walkpassVested').value) || 0;
+        totalTokens += walkpassVested / 0.000052500;
+        totalInvestment += walkpassVested;
 
-            const walkpassNotVested = parseFloat(document.getElementById('walkpassNotVested').value) || 0;
-            totalTokens += walkpassNotVested / 0.000068250;
-            totalInvestment += walkpassNotVested;
+        const walkpassNotVested = parseFloat(document.getElementById('walkpassNotVested').value) || 0;
+        totalTokens += walkpassNotVested / 0.000068250;
+        totalInvestment += walkpassNotVested;
 
-            const walklistSale = parseFloat(document.getElementById('walklistSale').value) || 0;
-            totalTokens += walklistSale / 0.000075075;
-            totalInvestment += walklistSale;
+        const walklistSale = parseFloat(document.getElementById('walklistSale').value) || 0;
+        totalTokens += walklistSale / 0.000075075;
+        totalInvestment += walklistSale;
 
-            document.getElementById('totalTokens').textContent = totalTokens.toFixed(2);
-            document.getElementById('averagePrice').textContent = (totalInvestment / totalTokens).toFixed(8);
-			  // Circulating Supply and Market Cap Calculations
-            const circulatingSupply = parseFloat(document.getElementById('circulatingSupply').value) || 0;
-            const marketCap = parseFloat(document.getElementById('marketCap').value) || 0;
-            const priceFuture = marketCap / circulatingSupply;
-            const adaHolding = totalTokens * priceFuture;
+        // Circulating Supply and Market Cap Calculations
+        const circulatingSupply = parseFloat(document.getElementById('circulatingSupply').value) || 0;
+        const marketCap = parseFloat(document.getElementById('marketCap').value) || 0;
+        const priceFuture = marketCap / circulatingSupply;
+        const adaHolding = totalTokens * priceFuture;
 
-            // Update Results
-            document.getElementById('totalTokens').textContent = totalTokens.toFixed(2);
-            document.getElementById('averagePrice').textContent = (totalInvestment / totalTokens).toFixed(8);
-            document.getElementById('priceFuture').textContent = priceFuture.toFixed(8);
-            document.getElementById('adaHolding').textContent = adaHolding.toFixed(2);
-        });
-    </script>
+        // Walkpass Airdrop Calculations
+        const numberOfWalkpass = parseFloat(document.getElementById('numberOfWalkpass').value) || 0;
+        const airdropTokens = numberOfWalkpass * 1571428.57;
+        const adaHoldingFromAirdrop = airdropTokens * priceFuture;
+
+        // Update Results
+        document.getElementById('totalTokens').value = totalTokens.toFixed(2);
+        document.getElementById('averagePrice').value = (totalInvestment / totalTokens).toFixed(8);
+        document.getElementById('priceFuture').value = priceFuture.toFixed(8);
+        document.getElementById('adaHolding').value = adaHolding.toFixed(2);
+
+        // Update Airdrop Results
+        document.getElementById('airdropTokens').value = airdropTokens.toFixed(2);
+        document.getElementById('adaHoldingFromAirdrop').value = adaHoldingFromAirdrop.toFixed(2);
+
+        // Combined Results Calculation
+        const totalCombinedTokens = totalTokens + airdropTokens;
+        const totalCombinedAdaHolding = adaHolding + adaHoldingFromAirdrop;
+
+        // Update Combined Results
+        document.getElementById('totalCombinedTokens').value = totalCombinedTokens.toFixed(2);
+        document.getElementById('totalCombinedAdaHolding').value = totalCombinedAdaHolding.toFixed(2);
+    });
+</script>
+
 </body>
 </html>
