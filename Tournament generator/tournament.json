@@ -1,0 +1,8 @@
+[
+    {
+        "pair": ["Logo1", "Logo2"],
+        "votes": {"Logo1": 0, "Logo2": 0},
+        "ipsVoted": [],
+        "complete": false
+    }
+]
