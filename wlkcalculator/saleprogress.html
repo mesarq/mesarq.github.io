@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Data Display</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Phase Allocation</h2>
+        <div id="phaseProgressBars"></div>
+        
+        <h2 class="mt-5">Minimum Raised %</h2>
+        <div class="progress">
+            <div id="minRaisedProgress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            fetch('https://client-api.yepple.io/apps/walkers/presale/overview')
+                .then(response => response.json())
+                .then(data => processApiResponse(data))
+                .catch(error => console.error('Error fetching API:', error));
+        });
+
+        function processApiResponse(apiResponse) {
+            var totalUsed = 0;
+            var totalAllocation = 150000; // Total allocation for minimum raised calculation
+
+            for (var phase in apiResponse.phases) {
+                var allocation = apiResponse.phases[phase].allocation || 0;
+                var used = apiResponse.phases[phase].used || 0;
+
+                totalUsed += used;
+
+                var percentUsed = (used / allocation) * 100;
+                $('#phaseProgressBars').append(
+                    '<div class="mb-2">' + phase + '</div>' +
+                    '<div class="progress mb-3">' +
+                        '<div class="progress-bar" role="progressbar" style="width: ' + percentUsed + '%;" aria-valuenow="' + percentUsed + '" aria-valuemin="0" aria-valuemax="100">' + percentUsed.toFixed(2) + '%</div>' +
+                    '</div>'
+                );
+            }
+
+            var minRaisedPercent = (totalUsed / totalAllocation) * 100;
+            $('#minRaisedProgress').css('width', minRaisedPercent + '%').attr('aria-valuenow', minRaisedPercent).text(minRaisedPercent.toFixed(2) + '%');
+        }
+    </script>
+</body>
+</html>
