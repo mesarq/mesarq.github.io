@@ -10,11 +10,18 @@
     <div class="container mt-5">
         <h2>Phase Allocation</h2>
         <div id="phaseProgressBars"></div>
-        
+
+        <h2 class="mt-5">Total Sale Progress</h2>
+        <div class="progress mb-3">
+            <div id="totalSaleProgress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+
         <h2 class="mt-5">Minimum Raised % (Total ADA Raised: <span id="totalRaised">0</span> ADA)</h2>
         <div class="progress">
             <div id="minRaisedProgress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
         </div>
+
+        <h1 id="additionalInfo" class="mt-5 w-100 text-center"></h1>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -28,13 +35,22 @@
 
         function processApiResponse(apiResponse) {
             var totalUsed = 0;
-            var totalAllocation = 150000; // Total allocation for minimum raised calculation
+            var otherPhasesTotalAllocation = 0;
 
             for (var phase in apiResponse.phases) {
-                var allocation = apiResponse.phases[phase].allocation || 0;
-                var used = apiResponse.phases[phase].used || 0;
+                if (phase !== "publicSale") {
+                    otherPhasesTotalAllocation += apiResponse.phases[phase].allocation || 0;
+                }
+                totalUsed += apiResponse.phases[phase].used || 0;
+            }
 
-                totalUsed += used;
+            var publicSaleAllocation = otherPhasesTotalAllocation - totalUsed;
+            apiResponse.phases.publicSale.allocation = Math.max(publicSaleAllocation, 0);
+
+            $('#phaseProgressBars').empty();
+            for (var phase in apiResponse.phases) {
+                var allocation = apiResponse.phases[phase].allocation;
+                var used = apiResponse.phases[phase].used;
 
                 var percentUsed = (used / allocation) * 100;
                 $('#phaseProgressBars').append(
@@ -45,9 +61,19 @@
                 );
             }
 
-            var minRaisedPercent = (totalUsed / totalAllocation) * 100;
+            var totalPercent = (totalUsed / otherPhasesTotalAllocation) * 100;
+            $('#totalSaleProgress').css('width', totalPercent + '%').attr('aria-valuenow', totalPercent).text(totalPercent.toFixed(2) + '%');
+
+            var minRaisedPercent = (totalUsed / 150000) * 100;
             $('#minRaisedProgress').css('width', minRaisedPercent + '%').attr('aria-valuenow', minRaisedPercent).text(minRaisedPercent.toFixed(2) + '%');
             $('#totalRaised').text(totalUsed);
+
+            if (totalUsed >= 150000) {
+                $('#additionalInfo').html('Minimum Goal Reached! 🎉🎊🎉');
+            } else {
+                var additionalAdaNeeded = 150000 - totalUsed;
+                $('#additionalInfo').html('Additional ADA needed to reach goal: ' + additionalAdaNeeded + ' ADA');
+            }
         }
     </script>
 </body>
