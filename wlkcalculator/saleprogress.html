@@ -22,6 +22,8 @@
         </div>
 
         <h1 id="additionalInfo" class="mt-5 w-100 text-center"></h1>
+		<img id="celebrationGif" src="moonwlk.gif" style="display: none; width: 100%; max-width: 400px; margin: auto;" />
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -68,11 +70,13 @@
             $('#minRaisedProgress').css('width', minRaisedPercent + '%').attr('aria-valuenow', minRaisedPercent).text(minRaisedPercent.toFixed(2) + '%');
             $('#totalRaised').text(totalUsed);
 
-            if (totalUsed >= 150000) {
+        if (totalUsed >= 150000) {
                 $('#additionalInfo').html('Minimum Goal Reached! 🎉🎊🎉');
+                $('#celebrationGif').show(); // Show the GIF when the goal is reached
             } else {
                 var additionalAdaNeeded = 150000 - totalUsed;
                 $('#additionalInfo').html('Additional ADA needed to reach goal: ' + additionalAdaNeeded + ' ADA');
+                $('#celebrationGif').hide(); // Hide the GIF if the goal is not reached
             }
         }
     </script>
