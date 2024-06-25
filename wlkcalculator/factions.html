@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Faction Breakdown Report</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #dropZone {
+            border: 2px dashed #007bff;
+            border-radius: 5px;
+            padding: 50px;
+            text-align: center;
+            color: #007bff;
+            cursor: pointer;
+        }
+        #dropZone.dragover {
+            background-color: #e9ecef;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Upload CSV</h1>
+        <div id="dropZone" class="mb-4">Drag and drop a CSV file here, or click to select a file</div>
+        <input type="file" id="fileInput" class="d-none">
+        <div id="report"></div>
+    </div>
+
+    <script>
+        document.getElementById('dropZone').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            handleFiles(event.target.files);
+        });
+
+        document.getElementById('dropZone').addEventListener('dragover', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.add('dragover');
+        });
+
+        document.getElementById('dropZone').addEventListener('dragleave', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.remove('dragover');
+        });
+
+        document.getElementById('dropZone').addEventListener('drop', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.remove('dragover');
+            handleFiles(event.dataTransfer.files);
+        });
+
+        function handleFiles(files) {
+            const file = files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    generateReport(text);
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function generateReport(csv) {
+            const lines = csv.split('\n').slice(1); // Skip the first line
+            const typeFactionCount = {};
+            const overallFactionCount = {};
+
+            lines.forEach(line => {
+                const columns = line.split(',');
+                let type = null;
+                let faction = null;
+
+                for (let i = 7; i < columns.length; i += 4) {
+                    if (columns[i].trim() === '"type"') {
+                        type = columns[i + 2].trim().replace(/"/g, '');
+                    }
+                    if (columns[i].trim() === '"faction"') {
+                        faction = columns[i + 2].trim().replace(/"/g, '');
+                    }
+                }
+
+                if (type && faction) {
+                    if (!typeFactionCount[type]) {
+                        typeFactionCount[type] = {};
+                    }
+                    if (!typeFactionCount[type][faction]) {
+                        typeFactionCount[type][faction] = 0;
+                    }
+                    typeFactionCount[type][faction]++;
+                    
+                    if (!overallFactionCount[faction]) {
+                        overallFactionCount[faction] = 0;
+                    }
+                    overallFactionCount[faction]++;
+                }
+            });
+
+            displayReport(typeFactionCount, overallFactionCount);
+        }
+
+        function displayReport(typeFactionCount, overallFactionCount) {
+            const reportDiv = document.getElementById('report');
+            reportDiv.innerHTML = '';
+
+            // Faction breakdown by type
+            let html = '<h1>Faction breakdown by type</h1>';
+            html += '<div class="row">';
+            html += '<div class="col-md-6">';
+            html += '<table class="table table-bordered"><thead class="thead-dark"><tr><th>Count</th><th>Type</th><th>Faction</th></tr></thead><tbody>';
+
+            const types = ["Men", "Women", "Hybrid", "Supernatural"];
+            const typeData = [];
+
+            types.forEach(type => {
+                if (typeFactionCount[type]) {
+                    Object.keys(typeFactionCount[type]).forEach(faction => {
+                        const count = typeFactionCount[type][faction];
+                        typeData.push({ type, faction, count });
+                        html += `<tr><td>${count}</td><td>${type}</td><td>${faction}</td></tr>`;
+                    });
+                }
+            });
+
+            html += '</tbody></table></div>';
+            html += '<div class="col-md-6"><canvas id="typeChart"></canvas></div></div>';
+
+            // Overall factions
+            html += '<h1>Overall factions</h1>';
+            html += '<div class="row">';
+            html += '<div class="col-md-6">';
+            html += '<table class="table table-bordered"><thead class="thead-dark"><tr><th>Count</th><th>Faction</th></tr></thead><tbody>';
+
+            const sortedFactions = Object.keys(overallFactionCount).sort((a, b) => overallFactionCount[b] - overallFactionCount[a]);
+            const overallData = [];
+
+            sortedFactions.forEach(faction => {
+                const count = overallFactionCount[faction];
+                overallData.push({ faction, count });
+                html += `<tr><td>${count}</td><td>${faction}</td></tr>`;
+            });
+
+            html += '</tbody></table></div>';
+            html += '<div class="col-md-6"><canvas id="overallChart"></canvas></div></div>';
+
+            reportDiv.innerHTML = html;
+
+            // Generate charts
+            generateChart('typeChart', 'Faction Breakdown by Type', typeData, 'type', 'faction');
+            generateChart('overallChart', 'Overall Factions', overallData, 'faction');
+        }
+
+        function generateChart(canvasId, title, data, labelKey, subLabelKey) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const labels = [];
+            const subLabels = [];
+            const counts = [];
+
+            data.forEach(item => {
+                labels.push(item[labelKey]);
+                subLabels.push(item[subLabelKey] || '');
+                counts.push(item.count);
+            });
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: title,
+                        data: counts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    return subLabels[context.dataIndex] ? 'Faction: ' + subLabels[context.dataIndex] : '';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
